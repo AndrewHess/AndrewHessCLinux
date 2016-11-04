@@ -18,7 +18,7 @@ int main() {
 	int done = 0;
 	while (!done) {
 		printf("Enter a integer: ");
-		scanf("%d", &num);
+		scanf("%d", ptr);
 		getchar();
 		
 		printf("Enter 1 to get the pointer value\n");
@@ -28,17 +28,15 @@ int main() {
 		char input = getchar();
 		while (getchar() != '\n');
 
-		printf("input: '%c'\n", input);
-
 		switch (input) {
 			case '1':
-				printf("Pointer value: %d\n", ptr);
+				printf("Pointer value: %p\n", ptr);
 				break;
 			case '2':
-				printf("Pointer address: %p\n", ptr);
+				printf("Pointer address: %p\n", &ptr);
 				break;
 			case '3':
-				printf("Integer value: %d\n", num);
+				printf("Integer value: %d\n", *ptr);
 				break;
 			default:
 				printf("Invalid option\n");
