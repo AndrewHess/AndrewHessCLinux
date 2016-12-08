@@ -8,20 +8,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define READ 10
-#define WRITE 11
-#define LOAD 20
-#define STORE 21
-#define ADD 30
-#define SUBTRACT 31
-#define DIVIDE 32
-#define MULTIPLY 33
-#define BRANCH 40
-#define BRANCHNEG 41
-#define BRANCHZERO 42
-#define HALT 43
+#define READ 		10
+#define WRITE		11
+#define LOAD 		20
+#define STORE 		21
+#define ADD 		30
+#define SUBTRACT 	31
+#define DIVIDE 		32
+#define MULTIPLY 	33
+#define BRANCH 		40
+#define BRANCHNEG 	41
+#define BRANCHZERO 	42
+#define HALT 		43
 
-void dump (int acc, int instCount, int instReg, int opCode, int operand, int * mem);
+void dump  (int acc, int instCount, int instReg, int opCode, int operand, int * mem);
 void error (int acc, int instCount, int instReg, int opCode, int operand, int * mem);
 
 int main() {
@@ -75,8 +75,7 @@ int main() {
 		switch (opCode) {
 			case READ:
 				printf("Enter a number: ");
-				scanf("%d", mem + sizeof(int)*operand);
-				printf("Done reading\n");
+				scanf("%d", mem + operand);
 				break;
 			case WRITE:
 				printf("%d\n", mem[operand]);
@@ -86,14 +85,18 @@ int main() {
 				break;
 			case STORE:
 				mem[operand] = acc;
+				break;
 			case ADD:
 				acc += mem[operand];
+				break;
 			case SUBTRACT:
 				acc -= mem[operand];
+				break;
 			case DIVIDE:
 				if (mem[operand] == 0) {
 					printf("*** Divide by zero ***\n");
 					error(acc, instCount, instReg, opCode, operand, mem);
+					running = 0;
 				}
 				else {
 					acc /= mem[operand];
@@ -127,18 +130,16 @@ int main() {
 		instCount++;
 	}
 
-	dump(acc, instCount, instReg, opCode, operand, mem);
-
 	exit(0);
 }
 
 void dump (int acc, int instCount, int instReg, int opCode, int operand, int * mem) {
 	printf("\nREGISTERS:\n");
 	printf("accumulator		%+05d\n", acc);
-	printf("instructionCounter	%02d\n", instCount);
+	printf("instructionCounter	   %02d\n", instCount);
 	printf("instructionRegister	%+05d\n", instReg);
-	printf("operationCode		%02d\n", opCode);
-	printf("operand			%02d\n", operand);
+	printf("operationCode		   %02d\n", opCode);
+	printf("operand			   %02d\n", operand);
 
 	printf("\nMEMORY:\n\t");
 	for (int i = 0; i < 10; i++) {
