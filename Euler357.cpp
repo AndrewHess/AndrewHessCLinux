@@ -58,15 +58,53 @@ void divisors(int ind, int exp, int cur, vector<vector<int>> factors, vector<int
 	}
 }
 
-void possible(int cur, vector<int> *primes, vector<bool> *p, int ind, vector<int> *posib) {
-	if (cur > pow(10, 5)) return;
-	else if (ind >= primes->size()) {
-		if (p->at(cur +1)) posib->push_back(cur);
+int solve(int cur, vector<int> primes, vector<bool> p, int ind, int sum) {
+	if (ind >= primes.size() || cur * primes[ind] > pow(10, 5)) {
+		if (p[cur +1]) {
+			bool ok = true;
+
+			vector<int> divs;
+			divisors(0, 0, 1, factors(cur, primes), &divs);
+
+			for (int k = 0; k < divs.size() && ok; k++) {
+				if (!p[divs[k] + cur/divs[k]]) ok = false; //binary(divs[k] + n/divs[k], primes) == -1) ok = false;
+			}
+
+			if (ok) sum += cur;
+			else cout << "\t\t\t\t\t";
+
+			cout << cur << ": ";
+			for (vector<int> f : factors(cur, primes)) cout << f[0] << ", "; // << "^" << f[1] << ", ";
+			cout << endl;
+		}
 	}
 	else {
-		possible(cur * primes->at(ind),	primes, p, ind +1, posib);
+		sum = solve(cur * primes[ind],	primes, p, ind +1, sum);
+		sum += solve(cur,		primes, p, ind +1, sum);
+	}
+
+	return sum;
+}
+
+void possible(int cur, vector<int> primes, vector<bool> p, int ind, vector<int> *posib) {
+	if (ind >= primes.size() || cur * primes[ind] > pow(10, 4)) {
+		if (p[cur +1]) posib->push_back(cur);
+	}
+	else {
+		possible(cur * primes[ind],	primes, p, ind +1, posib);
+		possible(cur, 			primes, p, ind +1, posib);
+	}
+
+/*
+	if (cur > pow(10, 4)) return;
+	else if (ind >= primes.size()) {
+		if (p[cur +1]) posib->push_back(cur);
+	}
+	else {
+		possible(cur * primes[ind],	primes, p, ind +1, posib);
 		possible(cur,			primes, p, ind +1, posib);
 	}
+*/
 }
 
 int main() {
@@ -95,10 +133,22 @@ int main() {
 	cout << "size: " << (&primes)->size() << endl;
 	cout << "size: " << primes.size() << endl;
 
+	sum = solve(1, primes, p, 0, sum);
+	cout << "Answer: " << sum << endl;
+/*
+	for (int i = 0; i < pow(10, 4); i++) {
+		if (i % 10 == 0) cout << endl;
+		cout << i << ": " << p[i] << "\t";
+	}
+*/
+//	sum = 1;
+//	for (int i = 2; i < pow(10, 6); i += 4) {
+		
+/*
 	vector<int> posib;
 	posib.push_back(1);
 	cout << "finding possible" << endl;
-	possible(2, &primes, &p, 1, &posib);
+	possible(2, primes, p, 1, &posib);
 	sort(posib.begin(), posib.end());
 	cout << "got " << posib.size() << " possible" << endl;
 //	for (int i : posib) cout << i << endl;
@@ -121,7 +171,7 @@ int main() {
 		for (vector<int> f : factors(n, primes)) cout << f[0] << ", "; // << "^" << f[1] << ", ";
 		cout << endl;
 	}
-
+*/
 /*
 	for (int i = 0; i < primes.size(); i++) {
 		int n = primes[i] -1;
@@ -142,6 +192,7 @@ int main() {
 		}
 	}
 */
+	//cout << "posib size: " << posib.size() << endl;
 	cout << sum << endl;
 
 	return 0;
