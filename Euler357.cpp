@@ -13,23 +13,6 @@
 
 using namespace std;
 
-int binary(int key, vector<int> primes) {
-	int low = 0;
-	int big = primes.size() -1;
-	int mid = (low + big)/2;
-
-	while (low <= big) {
-		int val = primes[mid];
-		if (val < key) low = mid +1;
-		else if (val > key) big = mid -1;
-		else return mid;
-
-		mid = (low + big)/2;
-	}
-
-	return -1;
-}
-
 vector<vector<int>> factors(int n, vector<int> primes) {
 	vector<vector<int>> f;
 
@@ -58,8 +41,15 @@ void divisors(int ind, int exp, int cur, vector<vector<int>> factors, vector<int
 	}
 }
 
-int solve(int cur, vector<int> primes, vector<bool> p, int ind, int sum) {
+int solve(long cur, vector<int> primes, vector<bool> p, int ind) {
+	long sum = 0;
+
+	if (cur * primes[ind] < 0) return sum;
 	if (ind >= primes.size() || cur * primes[ind] > pow(10, 5)) {
+		if (cur +1 >= p.size()) {
+			cout << "cur: " << cur << endl;
+			return sum;
+		}
 		if (p[cur +1]) {
 			bool ok = true;
 
@@ -79,39 +69,18 @@ int solve(int cur, vector<int> primes, vector<bool> p, int ind, int sum) {
 		}
 	}
 	else {
-		sum = solve(cur * primes[ind],	primes, p, ind +1, sum);
-		sum += solve(cur,		primes, p, ind +1, sum);
+		sum += solve(cur * primes[ind],	primes, p, ind +1);
+		sum += solve(cur,		primes, p, ind +1);
 	}
 
 	return sum;
-}
-
-void possible(int cur, vector<int> primes, vector<bool> p, int ind, vector<int> *posib) {
-	if (ind >= primes.size() || cur * primes[ind] > pow(10, 4)) {
-		if (p[cur +1]) posib->push_back(cur);
-	}
-	else {
-		possible(cur * primes[ind],	primes, p, ind +1, posib);
-		possible(cur, 			primes, p, ind +1, posib);
-	}
-
-/*
-	if (cur > pow(10, 4)) return;
-	else if (ind >= primes.size()) {
-		if (p[cur +1]) posib->push_back(cur);
-	}
-	else {
-		possible(cur * primes[ind],	primes, p, ind +1, posib);
-		possible(cur,			primes, p, ind +1, posib);
-	}
-*/
 }
 
 int main() {
 	int sum = 0;
 	
 	// generate prime numbers
-	vector<bool> p(pow(10, 5) + 1);
+	vector<bool> p(pow(10, 5) + 2);
 
 	for (int i = 0; i < p.size(); i++) p[i] = true;
 	p[0] = false;
@@ -130,69 +99,9 @@ int main() {
 		if (p[i]) primes[ind++] = i;
 
 	cout << "found " << count << " primes" << endl;
-	cout << "size: " << (&primes)->size() << endl;
-	cout << "size: " << primes.size() << endl;
 
-	sum = solve(1, primes, p, 0, sum);
+	sum = solve(1, primes, p, 0);
 	cout << "Answer: " << sum << endl;
-/*
-	for (int i = 0; i < pow(10, 4); i++) {
-		if (i % 10 == 0) cout << endl;
-		cout << i << ": " << p[i] << "\t";
-	}
-*/
-//	sum = 1;
-//	for (int i = 2; i < pow(10, 6); i += 4) {
-		
-/*
-	vector<int> posib;
-	posib.push_back(1);
-	cout << "finding possible" << endl;
-	possible(2, primes, p, 1, &posib);
-	sort(posib.begin(), posib.end());
-	cout << "got " << posib.size() << " possible" << endl;
-//	for (int i : posib) cout << i << endl;
-
-	for (int n : posib) {
-		bool ok = true;
-
-		vector<int> divs;
-		divisors(0, 0, 1, factors(n, primes), &divs);
-
-		for (int k = 0; k < divs.size() && ok; k++) {
-			if (binary(divs[k] + n/divs[k], primes) == -1) ok = false;
-		}
-
-		if (ok) sum += n;
-		else cout << "\t\t\t\t\t";
-
-		sum += n;
-		cout << n << ": ";
-		for (vector<int> f : factors(n, primes)) cout << f[0] << ", "; // << "^" << f[1] << ", ";
-		cout << endl;
-	}
-*/
-/*
-	for (int i = 0; i < primes.size(); i++) {
-		int n = primes[i] -1;
-		bool ok = true; //(n%10 == 0 || n%10 == 2 || n%10 == 8); 
-		
-		vector<int> divs;
-		divisors(0, 0, 1, factors(n, primes), &divs);
-
-		for (int k = 0; k < divs.size() && ok; k++) {
-			if (binary(divs[k] + n/divs[k], primes) == -1) ok = false;
-		}
-
-		if (ok) {
-			sum += n;
-			cout << n << ": ";
-			for (vector<int> f : factors(n, primes)) cout << f[0] << ", "; // "^" << f[1] << ", ";
-			cout << endl;
-		}
-	}
-*/
-	//cout << "posib size: " << posib.size() << endl;
 	cout << sum << endl;
 
 	return 0;
