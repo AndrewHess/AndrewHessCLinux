@@ -88,7 +88,7 @@ class ComputerScientist {
 			return name;
 		}
 
-		vector<string> getLanguages() {
+		virtual vector<string> getLanguages() {
 			return languages;
 		}
 
@@ -96,15 +96,15 @@ class ComputerScientist {
 			return employer;
 		}
 
-		void setName(string n) {
+		virtual void setName(string n) {
 			name = n;
 		}
 
-		void setLanguages(vector<string> langs) {
+		virtual void setLanguages(vector<string> langs) {
 			languages = langs;
 		}
 
-		void addLanguage(string lang) {
+		virtual void addLanguage(string lang) {
 			languages.push_back(lang);
 		}
 
@@ -137,32 +137,37 @@ class CSStudent: public Student, public ComputerScientist {
 
 		virtual void printAtts() {
 			Student * s = static_cast<Student *>(this);
-			ComputerScientist * cs = static_cast<ComputerScientist *> (this);
+
 			cout << "Name: \n\t" << s->getName() << endl;
 
 			cout << "Spoken Languages: " << endl;
-			for (string str : s->getLanguages()) cout << "\t" << str << endl;
+			for (string str : Student::getLanguages()) cout << "\t" << str << endl;
 
 			cout << "Coding Languages: " << endl;
-			for (string str : cs->getLanguages()) cout << "\t" << str << endl;
+			for (string str : ComputerScientist::getLanguages()) cout << "\t" << str << endl;
 
-			cout << "School: \n\t" << s->getSchool() << endl;
-			cout << "Employer: \n\t" << cs->getEmployer() << endl;
+			cout << "School: \n\t" << getSchool() << endl;
+			cout << "Employer: \n\t" << getEmployer() << endl;
 			
 			cout << "Awards: " << endl;
 			for (string str : awards) cout << "\t" << str << endl;
+		}
 
-		/*	
-			cout << "in CSStudent print Atts" << endl;
-		//	static<Student *>(this)->printAtts();
-			Student * s = dynamic_cast<Student *>(this);
-			cout << "printing name: \'" << s->getName() << "\'" << endl;
-			cout << "finished casting" << endl;
+		virtual string getName() {
+			return Student::getName();
+		}
 
-			s->printAtts();
-			//((Student *) this)->printAtts();
-			//((ComputerScientist *) this)->printAtts();
-		*/
+		virtual void setName(string n) {
+			Student::setName(n);
+			ComputerScientist::setName(n);
+		}
+
+		vector<string> getSLangs() {
+			return Student::getLanguages();
+		}
+
+		vector<string> getCSLangs() {
+			return ComputerScientist::getLanguages();
 		}
 };
 
@@ -212,5 +217,7 @@ int main() {
 	cout << "CS Student as Computer Scientist: " << endl;
 	com->printAtts();
 
+	cout << "printing name" << endl;
+	cout << css->getName() << endl;
 	return 0;
 }
