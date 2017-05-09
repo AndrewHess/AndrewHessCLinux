@@ -36,7 +36,7 @@ class Student {
 			return languages;
 		}
 
-		virtual string getSchool() {
+		string getSchool() {
 			return school;
 		}
 
@@ -52,17 +52,17 @@ class Student {
 			languages.push_back(lang);
 		}
 
-		virtual void setSchool(string schl) {
+		void setSchool(string schl) {
 			school = schl;
 		}
 
 		virtual void printAtts() {
-			cout << "Name: \t" << name << endl;
+			cout << "Name: \n\t" << name << endl;
 			
-			cout << "Langs: ";
+			cout << "Languages: " << endl;
 			for (string s : languages) cout << "\t" << s << endl;
 
-			cout << "School:\t" << school << endl << endl;
+			cout << "School:\n\t" << school << endl << endl;
 		}
 };
 
@@ -113,12 +113,12 @@ class ComputerScientist {
 		}
 
 		virtual void printAtts() {
-			cout << "Name: \t" << name << endl;
+			cout << "Name: \n\t" << name << endl;
 
-			cout << "Langs: ";
+			cout << "Languages: " << endl;
 			for (string s : languages) cout << "\t" << s << endl;
 
-			cout << "Employer: \t" << employer << endl << endl;
+			cout << "Employer: \n\t" << employer << endl << endl;
 		}
 };
 
@@ -136,15 +136,33 @@ class CSStudent: public Student, public ComputerScientist {
 		}
 
 		virtual void printAtts() {
+			Student * s = static_cast<Student *>(this);
+			ComputerScientist * cs = static_cast<ComputerScientist *> (this);
+			cout << "Name: \n\t" << s->getName() << endl;
+
+			cout << "Spoken Languages: " << endl;
+			for (string str : s->getLanguages()) cout << "\t" << str << endl;
+
+			cout << "Coding Languages: " << endl;
+			for (string str : cs->getLanguages()) cout << "\t" << str << endl;
+
+			cout << "School: \n\t" << s->getSchool() << endl;
+			cout << "Employer: \n\t" << cs->getEmployer() << endl;
+			
+			cout << "Awards: " << endl;
+			for (string str : awards) cout << "\t" << str << endl;
+
+		/*	
 			cout << "in CSStudent print Atts" << endl;
-		//	reinterpret_cast<Student *>(this)->printAtts();
-			Student * s = reinterpret_cast<Student *>(this);
+		//	static<Student *>(this)->printAtts();
+			Student * s = dynamic_cast<Student *>(this);
 			cout << "printing name: \'" << s->getName() << "\'" << endl;
 			cout << "finished casting" << endl;
 
 			s->printAtts();
 			//((Student *) this)->printAtts();
 			//((ComputerScientist *) this)->printAtts();
+		*/
 		}
 };
 
@@ -175,33 +193,24 @@ int main() {
 	ComputerScientist * cs = new ComputerScientist(name, cslangs, emp);
 	CSStudent * csstu = new CSStudent(name, slangs, cslangs, schl, emp, awards);
 
-	cout << "stu:" << endl;
-	cout << "\t" << stu->getName() << endl;
-	for (string s : stu->getLanguages()) cout << "\t" << s << endl;
-	cout << "\t" << stu->getSchool() << endl;
-	cout << "-------------------------------" << endl << endl;
-
-	cout << "cs:" << endl;
-	cout << "\t" << cs->getName() << endl;
-	for (string s : cs->getLanguages()) cout << "\t" << s << endl;
-	cout << "\t" << cs->getEmployer() << endl;
-	cout << "-------------------------------" << endl << endl;
-
-	cout << "stu:" << endl;
+	cout << "Student: " << endl;
 	stu->printAtts();
+	cout << "-------------------------------" << endl << endl;;
 
-	cout << "cs:" << endl;
+	cout << "Computer Scientist: " << endl;
 	cs->printAtts();
+	cout << "-------------------------------" << endl << endl;
 
-//	cout << "csstu:" << endl;
-//	cout << "\t" << csstu->getName() << endl;
+	CSStudent * css  = new CSStudent(name, slangs, cslangs, schl, emp, awards);
+	Student * s = static_cast<Student *>(css);
+	ComputerScientist * com = static_cast<ComputerScientist *>(css);
 
-
-	Student * s = new CSStudent();
-	cout << "s: " << endl;
-//	cout << "\t\'" << s->getName() << "\'" << endl;
-
+	cout << "CS Student as Student: " << endl;
 	s->printAtts();
+	cout << "------------------------------" << endl << endl;
+
+	cout << "CS Student as Computer Scientist: " << endl;
+	com->printAtts();
 
 	return 0;
 }
