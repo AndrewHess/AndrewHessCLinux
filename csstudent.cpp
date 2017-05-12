@@ -173,6 +173,10 @@ class CSStudent: public Student, public ComputerScientist {
 			ComputerScientist::addLanguage(lang);
 		}
 
+		void addAward(string a) {
+			awards.push_back(a);
+		}
+
 		virtual void printAtts() {
 			cout << "Name: " << getName() << endl;
 
@@ -199,12 +203,12 @@ class CSStudent: public Student, public ComputerScientist {
 
 
 int main() {
+	// setup the variables to make instances of the classes
 	string name = "Andrew";
 
 	vector<string> slangs;
 	slangs.push_back("English");
 	slangs.push_back("French");
-	slangs.push_back("Italian");
 
 	string schl = "ASFA";
 
@@ -212,7 +216,6 @@ int main() {
 	cslangs.push_back("Python");
 	cslangs.push_back("Java");
 	cslangs.push_back("C");
-	cslangs.push_back("C++");
 
 	string emp = "HackerRank";
 
@@ -220,28 +223,59 @@ int main() {
 	awards.push_back("Award 1");
 	awards.push_back("Award 2");
 
-	Student * stu = new Student(name, slangs, schl);
+	// make an instance of each class
+	Student * s = new Student(name, slangs, schl);
 	ComputerScientist * cs = new ComputerScientist(name, cslangs, emp);
-	CSStudent * csstu = new CSStudent(name, slangs, cslangs, schl, emp, awards);
+	CSStudent * css = new CSStudent(name, slangs, cslangs, schl, emp, awards);
 
+	// print the student's attributes
 	cout << "Student: " << endl;
-	stu->printAtts();
+	s->printAtts();
 	cout << "-------------------------------" << endl << endl;;
 
+	// change some of the student's attributes
+	s->addLanguage("Italian");
+	s->setSchool("Caltech");
+	s->setName("Andrew Hess");
+
+	// print the student's new attributes
+	cout << "Student: " << endl;
+	s->printAtts();
+	cout << "-------------------------------" << endl << endl;
+
+	// print the comptuer scientist's attributes
 	cout << "Computer Scientist: " << endl;
 	cs->printAtts();
 	cout << "-------------------------------" << endl << endl;
 
-	CSStudent * css  = new CSStudent(name, slangs, cslangs, schl, emp, awards);
-	Student * s = static_cast<Student *>(css);
-	ComputerScientist * com = static_cast<ComputerScientist *>(css);
+	// change their attributes
+	cs->addLanguage("C++");
+	cs->setEmployer("JPL");
+	
+	// print out their new attributes
+	cout << "Computer Scientist: " << endl;
+	cs->printAtts();
+	cout << "-------------------------------" << endl << endl;
 
+	// cast the CSStudent to Student and ComputerScientist
+	s = static_cast<Student *>(css);
+	cs = static_cast<ComputerScientist *>(css);
+
+	// should use the CSStudent printAtts method
 	cout << "CS Student as Student: " << endl;
 	s->printAtts();
 	cout << "------------------------------" << endl << endl;
 
+	// change some attributes of cs and css
+	cs->setName("Andrew Hess");
+	cs->addLanguage("C++");
+	cs->setEmployer("JPL");
+	css->addAward("Award 3");
+	css->setSchool("Caltech");
+
+	// print the attributes, should use the CSStudent printAtts method
 	cout << "CS Student as Computer Scientist: " << endl;
-	com->printAtts();
+	cs->printAtts();
 
 	return 0;
 }
