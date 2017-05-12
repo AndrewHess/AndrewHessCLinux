@@ -1,8 +1,11 @@
 /*
-	student.h
+	csstudent.cpp
 	Andrew Hess
 	5/3/17
 
+	Create a Student class, ComputerScientist class, and CSStudent
+	class that inherits from the other two to see how multiple 
+	inheritance works.
 */
 
 #include <iostream>
@@ -57,12 +60,13 @@ class Student {
 		}
 
 		virtual void printAtts() {
-			cout << "Name: \n\t" << name << endl;
+			cout << "Name: " << name << endl;
 			
-			cout << "Languages: " << endl;
-			for (string s : languages) cout << "\t" << s << endl;
+			cout << "Languages: ";
+			for (int i = 0; i < languages.size() -1; i++) cout << languages[i] << ", ";
+			cout << languages[languages.size() -1] << endl;
 
-			cout << "School:\n\t" << school << endl << endl;
+			cout << "School: " << school << endl;
 		}
 };
 
@@ -113,12 +117,13 @@ class ComputerScientist {
 		}
 
 		virtual void printAtts() {
-			cout << "Name: \n\t" << name << endl;
+			cout << "Name: " << name << endl;
 
-			cout << "Languages: " << endl;
-			for (string s : languages) cout << "\t" << s << endl;
+			cout << "Languages: ";
+			for (int i = 0; i < languages.size() -1; i++) cout << languages[i] << ", ";
+			cout << languages[languages.size() -1] << endl;
 
-			cout << "Employer: \n\t" << employer << endl << endl;
+			cout << "Employer: " << employer << endl;
 		}
 };
 
@@ -135,24 +140,6 @@ class CSStudent: public Student, public ComputerScientist {
 			awards = a;
 		}
 
-		virtual void printAtts() {
-			Student * s = static_cast<Student *>(this);
-
-			cout << "Name: \n\t" << s->getName() << endl;
-
-			cout << "Spoken Languages: " << endl;
-			for (string str : Student::getLanguages()) cout << "\t" << str << endl;
-
-			cout << "Coding Languages: " << endl;
-			for (string str : ComputerScientist::getLanguages()) cout << "\t" << str << endl;
-
-			cout << "School: \n\t" << getSchool() << endl;
-			cout << "Employer: \n\t" << getEmployer() << endl;
-			
-			cout << "Awards: " << endl;
-			for (string str : awards) cout << "\t" << str << endl;
-		}
-
 		virtual string getName() {
 			return Student::getName();
 		}
@@ -166,8 +153,47 @@ class CSStudent: public Student, public ComputerScientist {
 			return Student::getLanguages();
 		}
 
+		void setSLangs(vector<string> langs) {
+			Student::setLanguages(langs);
+		}
+
+		void addSLang(string lang) {
+			Student::addLanguage(lang);
+		}
+
 		vector<string> getCSLangs() {
 			return ComputerScientist::getLanguages();
+		}
+
+		void setCSLangs(vector<string> langs) {
+			ComputerScientist::setLanguages(langs);
+		}
+
+		void addCSLang(string lang) {
+			ComputerScientist::addLanguage(lang);
+		}
+
+		virtual void printAtts() {
+			cout << "Name: " << getName() << endl;
+
+			vector<string> langs = getSLangs();
+			cout << "Spoken Languages: ";
+
+			for (int i = 0; i < langs.size() -1; i++) cout << langs[i] << ", ";
+			cout << langs[langs.size() -1] << endl;
+
+			langs = getCSLangs();
+			cout << "Coding Languages: ";
+
+			for (int i = 0; i < langs.size() -1; i++) cout << langs[i] << ", ";
+			cout << langs[langs.size() -1] << endl;
+
+			cout << "School: " << getSchool() << endl;
+			cout << "Employer: " << getEmployer() << endl;
+			
+			cout << "Awards: ";
+			for (int i = 0; i < awards.size() -1; i++) cout << awards[i] << ", ";
+			cout << awards[awards.size() -1] << endl;
 		}
 };
 
@@ -217,7 +243,5 @@ int main() {
 	cout << "CS Student as Computer Scientist: " << endl;
 	com->printAtts();
 
-	cout << "printing name" << endl;
-	cout << css->getName() << endl;
 	return 0;
 }
